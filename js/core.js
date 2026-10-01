@@ -50,7 +50,7 @@ window.MA = window.MA || {};
   MA.override = (key, fallback, alt = "", fit = "contain") => {
     const o = MA.OVERRIDES && MA.OVERRIDES[key];
     if (!o) return fallback;
-    if (typeof o === "string") return `<img class="ovr" src="assets/overrides/${MA.esc(o)}" alt="${MA.esc(alt)}">`;
+    if (typeof o === "string") return `<img class="ovr ${fit}" src="assets/overrides/${MA.esc(o)}" alt="${MA.esc(alt)}" decoding="async">`;
     // region of a texture atlas, drawn as a percentage-based CSS sprite so it scales with its box
     const [IW, IH] = o.size, [x, y, w, h] = o.rect;
     const pct = (a, b) => (b > 0 ? (a / b) * 100 : 0).toFixed(4) + "%";

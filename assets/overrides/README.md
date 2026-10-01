@@ -20,13 +20,13 @@ MA.OVERRIDES = {
 };
 ```
 
+The Persona 5 deck lives in `p5/`: one WebP per card (`back.webp`, `00-fool.webp` … `21-world.webp`, Rider–Waite
+numbering), so a reading only downloads the cards it shows. They're already registered in `manifest.js`.
+
 A value can also point at a region of one texture atlas instead of a separate file:
 
 ```js
-"tarot/p5/0": { src: "arcana.webp", size: [5131, 3076], rect: [514, 1, 512, 1024] },  // x, y, w, h in atlas pixels
+"tarot/p5/0": { src: "deck.webp", size: [5131, 3076], rect: [514, 1, 512, 1024] },  // x, y, w, h in atlas pixels
 ```
-
-`arcana.webp` is the Persona 5 deck (back plus 22 Major Arcana in Marseille order on a 10 × 3 grid of
-513 × 1025 px cells). Its regions are already listed in `manifest.js`.
 
 Only use images you have the right to publish.
