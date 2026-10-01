@@ -61,6 +61,7 @@ MA.views = MA.views || {};
   }
 
   function cardBack() {
+    if (skin === "p5" && MA.hasOverride("tarot/p5/back")) return `<div class="cb-art">${MA.override("tarot/p5/back", "", "Card back", "cover")}</div>`;
     if (skin === "p5") return `<div class="cb-p5"><div class="cb-p5-stripe"></div>${MA.icon("tophat", "cb-hat")}${MA.icon("mask", "cb-mask")}
       <div class="cb-p5-txt">TAKE<br>YOUR<br>HEART</div></div>`;
     if (skin === "jojo") return `<div class="cb-jojo"><svg viewBox="0 0 100 160" class="cb-arrow" aria-hidden="true">
@@ -71,6 +72,7 @@ MA.views = MA.views || {};
 
   function cardFront(c) {
     const art = MA.override(`tarot/${skin}/${c.n}`, MA.icon("t" + c.n, "tc-icon"), c.name);
+    if (skin === "p5" && MA.hasOverride(`tarot/p5/${c.n}`)) return `<div class="cf-art">${art}</div>`;
     if (skin === "p5") return `<div class="cf-p5"><div class="cf-p5-num">${MA.ROMAN[c.n]}</div>
       <div class="cf-p5-art">${art}</div><div class="cf-p5-name">${ransom(c.name.replace(/^The /, ""), c.n)}</div>
       <div class="cf-p5-conf">${esc(c.p5.conf)}</div></div>`;

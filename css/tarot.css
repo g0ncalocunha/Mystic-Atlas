@@ -125,6 +125,8 @@
 .cb-hat { position: absolute; top: 14%; width: 58%; height: auto; fill: #fff; filter: drop-shadow(4px 4px 0 #e60012); }
 .cb-mask { position: absolute; top: 46%; width: 50%; height: auto; fill: #e60012; filter: drop-shadow(3px 3px 0 #000); }
 .cb-p5-txt { position: absolute; bottom: 8%; font: calc(var(--cw) * .1)/1 "Anton", sans-serif; color: #fff; transform: rotate(-8deg); letter-spacing: .05em; text-align: center; }
+.cb-art { position: absolute; inset: 0; background: #0a0a0a; overflow: hidden; }
+.cf-art { position: absolute; inset: 0; background: #fff; display: flex; align-items: center; justify-content: center; padding: 6px 4px; }
 .cf-p5 { position: absolute; inset: 0; background: linear-gradient(160deg, transparent 0 55%, #e60012 55% 72%, transparent 72%), #0a0a0a; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 10px 8px 12px; }
 .cf-p5-num { align-self: flex-start; font: italic calc(var(--cw) * .2)/1 "Anton", sans-serif; color: #e60012; -webkit-text-stroke: 1px #fff; transform: skew(-10deg); }
 .cf-p5-art { width: 66%; aspect-ratio: 1; margin-top: -14%; }

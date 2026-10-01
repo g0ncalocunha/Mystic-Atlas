@@ -47,10 +47,18 @@ window.MA = window.MA || {};
   };
 
   /* optional user-provided art (see assets/overrides/README.md) */
-  MA.override = (key, fallback, alt = "") => {
-    const src = MA.OVERRIDES && MA.OVERRIDES[key];
-    return src ? `<img class="ovr" src="assets/overrides/${MA.esc(src)}" alt="${MA.esc(alt)}">` : fallback;
+  MA.override = (key, fallback, alt = "", fit = "contain") => {
+    const o = MA.OVERRIDES && MA.OVERRIDES[key];
+    if (!o) return fallback;
+    if (typeof o === "string") return `<img class="ovr" src="assets/overrides/${MA.esc(o)}" alt="${MA.esc(alt)}">`;
+    // region of a texture atlas, drawn as a percentage-based CSS sprite so it scales with its box
+    const [IW, IH] = o.size, [x, y, w, h] = o.rect;
+    const pct = (a, b) => (b > 0 ? (a / b) * 100 : 0).toFixed(4) + "%";
+    return `<span class="ovr-sprite ${fit}" role="img" aria-label="${MA.esc(alt)}" style="aspect-ratio:${w}/${h};` +
+      `background-image:url('assets/overrides/${MA.esc(o.src)}');background-size:${pct(IW, w)} ${pct(IH, h)};` +
+      `background-position:${pct(x, IW - w)} ${pct(y, IH - h)}"></span>`;
   };
+  MA.hasOverride = (key) => !!(MA.OVERRIDES && MA.OVERRIDES[key]);
 
   MA.toast = (msg, ms = 2600) => {
     const t = MA.$("#toast");
