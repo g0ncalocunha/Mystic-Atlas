@@ -23,6 +23,9 @@ MA.OVERRIDES = {
 The Persona 5 deck lives in `p5/`: one WebP per card (`back.webp`, `00-fool.webp` … `21-world.webp`, Rider–Waite
 numbering), so a reading only downloads the cards it shows. They're already registered in `manifest.js`.
 
+The Jackie Chan Adventures talismans live in `jca/`: one 224 × 224 transparent WebP per animal (`rat.webp` … `pig.webp`;
+the Sheep talisman is `goat.webp`), cut from a sheet of the twelve medallions. They're registered in `manifest.js` too.
+
 A value can also point at a region of one texture atlas instead of a separate file:
 
 ```js

@@ -29,4 +29,18 @@ MA.OVERRIDES = {
   "tarot/p5/19": "p5/19-sun.webp",                     // Le Soleil
   "tarot/p5/20": "p5/20-judgement.webp",               // Le Jugement
   "tarot/p5/21": "p5/21-world.webp",                   // Le Monde
+
+  /* Jackie Chan Adventures talismans: one 224 x 224 transparent WebP per animal, cut from the medallion sheet. */
+  "jca/rat": "jca/rat.webp",
+  "jca/ox": "jca/ox.webp",
+  "jca/tiger": "jca/tiger.webp",
+  "jca/rabbit": "jca/rabbit.webp",
+  "jca/dragon": "jca/dragon.webp",
+  "jca/snake": "jca/snake.webp",
+  "jca/horse": "jca/horse.webp",
+  "jca/goat": "jca/goat.webp",    // the Sheep talisman
+  "jca/monkey": "jca/monkey.webp",
+  "jca/rooster": "jca/rooster.webp",
+  "jca/dog": "jca/dog.webp",
+  "jca/pig": "jca/pig.webp",
 };

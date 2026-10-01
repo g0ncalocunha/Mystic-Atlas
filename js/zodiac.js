@@ -38,24 +38,35 @@ MA.views = MA.views || {};
   function emblem(i, cls = "") {
     const a = A[i], uid = "e" + i + cls.replace(/\W/g, "");
     const ovr = MA.OVERRIDES && MA.OVERRIDES[`${theme}/${a.id}`];
-    if (ovr) return `<span class="emblem ${cls}"><img src="assets/overrides/${esc(ovr)}" alt="${a.name}"></span>`;
+    // an svg <image> rather than <img>, so the same markup also works inside the wheel's svg
+    if (ovr) return `<svg class="emblem ${cls}" viewBox="0 0 200 200" role="img" aria-label="${a.name}"><image href="assets/overrides/${esc(ovr)}" width="200" height="200"/></svg>`;
     let svg;
     if (theme === "jca") {
-      svg = `<defs><radialGradient id="${uid}s" cx="38%" cy="32%" r="75%"><stop offset="0" stop-color="#cfd3c4"/><stop offset=".55" stop-color="#8f9686"/><stop offset="1" stop-color="#4b5148"/></radialGradient>
-        <radialGradient id="${uid}i" cx="60%" cy="65%" r="70%"><stop offset="0" stop-color="#a8ae9c"/><stop offset="1" stop-color="#6c7365"/></radialGradient></defs>
-        <circle cx="100" cy="104" r="92" fill="#2b2f29" opacity=".45"/>
-        <circle cx="100" cy="100" r="92" fill="url(#${uid}s)" stroke="#3a3f37" stroke-width="3"/>
-        <circle cx="100" cy="100" r="74" fill="url(#${uid}i)" stroke="#5c6357" stroke-width="2"/>
-        <circle cx="100" cy="100" r="80" fill="none" stroke="#b8bdae" stroke-width="1.5" stroke-dasharray="3 5" opacity=".7"/>
-        ${iconG(a.id, 42, 44, 116, `fill="#e4e8da" opacity=".8"`)}
-        ${iconG(a.id, 40, 42, 116, `fill="#3d4339"`)}
-        <path d="M30 70 A80 80 0 0 1 80 25" stroke="#fff" stroke-width="4" fill="none" opacity=".35" stroke-linecap="round"/>`;
+      svg = stoneEmblem(a, uid);
     } else if (theme === "cultivation") {
       svg = inkEmblem(a, uid, i);
     } else {
       svg = paperCut(a, uid);
     }
     return `<svg class="emblem ${cls}" viewBox="0 0 200 200" role="img" aria-label="${a.name}">${svg}</svg>`;
+  }
+
+  /* flat-topped regular octagon, the shape of every talisman */
+  function octagon(r, cx = 100, cy = 100) {
+    return Array.from({ length: 8 }, (_, k) => {
+      const ang = ((k * 45 + 22.5) * Math.PI) / 180;
+      return `${(cx + Math.cos(ang) * r).toFixed(1)},${(cy + Math.sin(ang) * r).toFixed(1)}`;
+    }).join(" ");
+  }
+
+  /* talisman: grey stone octagon with a bevelled rim, a glossy face and the animal inlaid in its colour */
+  function stoneEmblem(a, uid) {
+    return `<defs><linearGradient id="${uid}r" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a7a9b8"/><stop offset="1" stop-color="#6b6d7e"/></linearGradient>
+        <radialGradient id="${uid}f" cx="45%" cy="38%" r="70%"><stop offset="0" stop-color="#c9cbd8"/><stop offset=".7" stop-color="#9c9eae"/><stop offset="1" stop-color="#7f8192"/></radialGradient></defs>
+      <polygon points="${octagon(97)}" fill="url(#${uid}r)" stroke="#2c2d33" stroke-width="4" stroke-linejoin="round"/>
+      <polygon points="${octagon(80)}" fill="url(#${uid}f)" stroke="#4b4d58" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M38 92 Q46 44 100 34 Q150 30 168 70 Q120 52 70 70 Q50 80 38 92Z" fill="#fff" opacity=".28"/>
+      ${iconG(a.id, 46, 46, 108, `fill="${a.talisman.color}" stroke="#1d1d22" stroke-width="16" paint-order="stroke" stroke-linejoin="round"`)}`;
   }
 
   /* 剪纸 paper-cut: red paper with a sawtooth rim, crescent cuts and an outlined animal on cream */
@@ -223,6 +234,7 @@ MA.views = MA.views || {};
       box.innerHTML = `<div class="zh-art">${emblem(nowYear.b, "big")}</div>
         <div class="zh-txt"><p class="zh-kicker">${themeWord("The year of the", "Current talisman year:", "The heavens now favour the")} ${nowYear.label}</p>
         <h1>${themeWord("Find your animal", "Which talisman is yours?", "Awaken your spirit beast")}</h1>
+        ${theme === "jca" ? `<p class="zh-legend">“${MA.JCA.legend}” <small>— Uncle</small></p>` : ""}
         <p>Enter your birth date to reveal your animal, your Four Pillars and how your five elements align.</p>
         <button type="button" class="btn">Enter my data</button></div>${theme === "cultivation" ? sectStrip() : ""}`;
       $(".btn", box).onclick = MA.openProfile;
@@ -233,11 +245,13 @@ MA.views = MA.views || {};
     const near = d.date.getMonth() < 2;
     const kicker = themeWord(`${esc(d.first)}, you were born in the year of the`,
       `Agent ${esc(d.first)}, your talisman is the`, `Cultivator ${esc(d.first)}, your spirit beast is the`);
-    const tag = theme === "jca" ? `<p class="zh-power">Power: <b>${a.talisman.power}</b> — ${a.talisman.desc}</p>` : "";
+    const tal = a.talisman;
+    const tag = theme === "jca" ? `<p class="zh-power">Power: <b>${tal.power}</b> — ${tal.desc}</p>
+      <p class="zh-wield">First wielded by <b>${tal.user}</b> in “${tal.ep}” · talisman #${tal.hunt} of 12 to be found</p>` : "";
     box.innerHTML = `<div class="zh-art">${emblem(y.b, "big hero-emblem")}</div>
       <div class="zh-txt"><p class="zh-kicker">${kicker}</p>
         <h1><span class="zh-zh">${y.zh}</span> ${y.label}</h1>
-        <p class="zh-py">${y.py} · ${d.lunarYear} · ${a.zh} ${a.name}${theme === "jca" && a.talisman.alias ? ` (${a.talisman.alias} talisman)` : ""}</p>
+        <p class="zh-py">${y.py} · ${d.lunarYear} · ${a.zh} ${a.name}${theme === "jca" && tal.alias ? ` (${tal.alias} talisman)` : ""}</p>
         ${tag}<p>${esc(a.about)}</p>
         ${near ? `<p class="zh-note">Lunar New Year ${d.lunarYear} fell on ${cny.toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" })}${MA.cn.hasIntl ? "" : " (approximate)"} — your animal follows that boundary.</p>` : ""}
       </div>${theme === "cultivation" ? sectStrip() : ""}`;
@@ -263,17 +277,39 @@ MA.views = MA.views || {};
         <g transform="scale(.44)">${emblem(i, "node").replace("<svg", '<svg width="200" height="200"')}</g>
         <text class="wn-t" x="44" y="106" text-anchor="middle">${a.name}${i === me ? " ★" : ""}</text></g>`;
     }).join("");
-    const centre = theme === "jca"
-      ? `<g class="wc"><circle cx="${C}" cy="${C}" r="70" class="wc-disc"/><text x="${C}" y="${C - 6}" text-anchor="middle" class="wc-big">12</text><text x="${C}" y="${C + 22}" text-anchor="middle" class="wc-small">TALISMANS</text></g>`
+    const jca = theme === "jca";
+    const centre = jca
+      ? shrineCentre(C)
       : `<g class="wc" transform="translate(${C} ${C}) scale(1.25)">${taijitu("spin").replace('viewBox="-50 -50 100 100"', 'x="-50" y="-50" width="100" height="100" viewBox="-50 -50 100 100"')}</g>`;
+    const base = jca
+      ? shrineDisc(C, R, P)
+      : `<circle cx="${C}" cy="${C}" r="${R}" class="wheel-ring"/><circle cx="${C}" cy="${C}" r="${R - 50}" class="wheel-ring inner"/>`;
     $("#zWheel", root).innerHTML = `<svg class="wheel" viewBox="0 0 600 640" role="group" aria-label="Zodiac wheel">
-      <circle cx="${C}" cy="${C}" r="${R}" class="wheel-ring"/><circle cx="${C}" cy="${C}" r="${R - 50}" class="wheel-ring inner"/>
-      ${rel}${centre}${nodes}</svg>`;
+      ${base}${jca ? centre + rel : rel + centre}${nodes}</svg>`;
     $$(".wn", root).forEach((n) => {
       const pick = () => { sel = +n.dataset.i; renderWheel(); renderDetail(); MA.route(A[sel].id); };
       n.addEventListener("click", pick);
       n.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); } });
     });
+  }
+
+  /* the talisman shrine: a bronze disc with an octagonal slot for each stone and ruyi clouds between them */
+  function shrineDisc(C, R, P) {
+    const slots = A.map((_, i) => { const [x, y] = P(i); return `<polygon class="sh-slot" points="${octagon(50, x, y)}"/>`; }).join("");
+    const clouds = A.map((_, i) => {
+      const [x, y] = P(i + 0.5, R + 4), rot = (i + 0.5) * 30;
+      return `<path class="sh-cloud" transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${rot})" d="M-14 4c0-8 10-8 10-1c0-9 12-9 12 0c0-7 10-7 10 1c0 4-4 6-8 4M-14 4c0 4 4 6 8 4"/>`;
+    }).join("");
+    let ticks = "";
+    for (let k = 0; k < 24; k++) { const [x1, y1] = P(k / 2, R - 78), [x2, y2] = P(k / 2, R - 66); ticks += `<line class="sh-tick" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`; }
+    return `<circle class="sh-disc" cx="${C}" cy="${C}" r="${R + 56}"/><circle class="sh-rim" cx="${C}" cy="${C}" r="${R + 48}"/>
+      ${clouds}${slots}<circle class="sh-ring" cx="${C}" cy="${C}" r="${R - 60}"/>${ticks}`;
+  }
+  /* 壽 longevity roundel at the centre, drawn as a gold double line on bronze */
+  function shrineCentre(C) {
+    const d = "M-26-38H26M0-48V-26M-40-24H40V-12M-40-24V-12M-26-12V2H26V-12M-40 12H40V24M-40 12V24M-26 24V38H26V24M0 38V48M-12 2V12M12 2V12";
+    return `<g class="wc" transform="translate(${C} ${C})"><circle class="sh-core" r="118"/><circle class="sh-core-ring" r="104"/>
+      <g transform="scale(1.7)"><path class="sh-shou" d="${d}"/><path class="sh-shou-in" d="${d}"/></g></g>`;
   }
 
   function renderDetail() {
@@ -282,8 +318,12 @@ MA.views = MA.views || {};
     const names = (arr) => arr.map((k) => `<button type="button" class="chip" data-i="${k}">${A[k].zh} ${A[k].name}</button>`).join("");
     const relMe = me != null && me !== sel ? `<p class="zd-rel r-${relationTo(me, sel)}">With your ${A[me].name}: <b>${REL_LABEL[relationTo(me, sel)]}</b></p>` : "";
     const tal = a.talisman;
-    const jca = theme === "jca" ? `<div class="zd-tal"><div><span class="lbl">Talisman power</span><b>${tal.power}</b><small>${tal.desc}</small></div>
-      <button type="button" class="btn act" data-fx="${tal.fx}">Activate!</button></div>` : "";
+    tint();
+    const jca = theme === "jca" ? `<div class="zd-tal"><div><span class="lbl">${a.name}${tal.alias ? ` (${tal.alias})` : ""} Talisman · power</span><b>${tal.power}</b><small>${tal.desc}</small></div>
+      <button type="button" class="btn act">Activate!</button></div>
+      <dl class="zd-dossier"><dt>First wielder</dt><dd>${tal.user}</dd><dt>Found</dt><dd>${tal.found}</dd>
+        <dt>First seen</dt><dd>“${tal.ep}” · Season 1, Ep. ${tal.epn}</dd><dt>T-Girl trigger</dt><dd>${tal.finger}</dd>
+        <dt>Why the ${tal.alias || a.name}?</dt><dd>${tal.pun}</dd></dl>` : "";
     const cult = theme === "cultivation" ? `<p class="zd-cult">Spirit beast of the <b>${EL[a.el].zh} ${a.el}</b> path · guards the hours ${a.hours}</p>` : "";
     box.innerHTML = `<div class="zd-top"><div class="zd-em">${emblem(sel, "detail")}</div>
       <div><h2>${a.name} <span class="zd-zh">${a.zh}</span></h2>
@@ -296,7 +336,14 @@ MA.views = MA.views || {};
       <p class="zd-note">Years start at Lunar New Year (late Jan – mid Feb).</p>`;
     $$(".chip", box).forEach((c) => (c.onclick = () => { sel = +c.dataset.i; renderWheel(); renderDetail(); }));
     const act = $(".act", box);
-    if (act) act.onclick = () => talismanFx(act.dataset.fx);
+    if (act) act.onclick = () => talismanFx(sel);
+  }
+
+  /* the selected talisman's colour drives the theme's accents */
+  function tint() {
+    if (theme !== "jca") { root.style.removeProperty("--tal"); root.style.removeProperty("--glow"); return; }
+    root.style.setProperty("--tal", A[sel].talisman.color);
+    root.style.setProperty("--glow", A[sel].talisman.glow);
   }
 
   /* ------------------------------------------------------------ element alignment */
@@ -426,10 +473,21 @@ MA.views = MA.views || {};
         <dl><dt>Agent</dt><dd>${esc(p ? p.name : "Unknown civilian")}</dd>
           <dt>Origin</dt><dd>${esc(p && p.place ? p.place : "Classified")}</dd>
           <dt>Assigned talisman</dt><dd>${a.name}${a.talisman.alias ? ` (${a.talisman.alias})` : ""} — ${a.talisman.power}</dd>
+          <dt>Recovered</dt><dd>${a.talisman.found}</dd>
           <dt>Threat level</dt><dd>${((n) => "▮".repeat(n) + "▯".repeat(5 - n))(1 + Math.floor(r() * 5))}</dd></dl></div>
         <div class="jf-uncle"><b>${esc(MA.pick(r, MA.JCA.quotes))}</b> ${esc(MA.pick(r, MA.JCA.tips))}</div>
-        <button type="button" class="btn act">Activate my talisman</button></div>`;
-      $(".act", box).onclick = () => talismanFx(a.talisman.fx);
+        <button type="button" class="btn act">Activate my talisman</button>
+        <div class="jf-vault"><div class="jv-h">Vault inventory · in the order Jackie found them</div>
+          <div class="jv-grid">${A.map((x, i) => [x, i]).sort((m, n) => m[0].talisman.hunt - n[0].talisman.hunt).map(([x, i]) =>
+            `<button type="button" class="jv ${x === a ? "mine" : ""} ${i === sel ? "on" : ""}" data-i="${i}" style="--c:${x.talisman.glow}">
+              <span class="jv-n">#${x.talisman.hunt}</span><span class="jv-em">${emblem(i, "vault")}</span>
+              <b>${x.talisman.alias || x.name}</b><small>“${x.talisman.ep}”</small></button>`).join("")}</div></div></div>`;
+      $(".act", box).onclick = () => talismanFx(A.indexOf(a));
+      $$(".jv", box).forEach((b) => (b.onclick = () => {
+        sel = +b.dataset.i; renderWheel(); renderDetail(); MA.route(A[sel].id);
+        $$(".jv", box).forEach((o) => o.classList.toggle("on", o === b));
+        $("#zDetail", root).scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }));
     } else if (theme === "cultivation") {
       if (!d) { box.innerHTML = `<h2 class="z-h">Cultivator's Record · 修仙录</h2><p>${esc(currentSect().about)}</p><p>Enter your birth data to receive your Dao name, spiritual root and realm.</p>`; return; }
       const r = MA.rng("dao|" + d.seed);
@@ -472,10 +530,15 @@ MA.views = MA.views || {};
     }
   }
 
-  function talismanFx(fx) {
+  function talismanFx(i) {
+    const tal = A[i].talisman, fx = tal.fx;
     const el = $(".hero-emblem", root) || $(".zd-em .emblem", root);
     const targets = [$(".zd-em", root), $(".zh-art", root), $(".jf-photo", root)].filter(Boolean);
-    targets.forEach((t) => { t.classList.remove("fx-" + t.dataset.fx); void t.offsetWidth; t.dataset.fx = fx; t.classList.add("fx-" + fx); setTimeout(() => t.classList.remove("fx-" + fx), 2200); });
+    targets.forEach((t) => {
+      t.classList.remove("fx-" + t.dataset.fx, "fx-on"); void t.offsetWidth;
+      t.dataset.fx = fx; t.style.setProperty("--fxglow", tal.glow); t.classList.add("fx-" + fx, "fx-on");
+      setTimeout(() => t.classList.remove("fx-" + fx, "fx-on"), 2200);
+    });
     const msgs = { alive: "Objects stir to life!", strength: "Super strength!", balance: "Yin and yang split apart!", speed: "Zoom!",
       fire: "Dragon fire!", invisible: "Now you see me…", heal: "Wounds mend.", astral: "Spirit leaves body!", morph: "Monkey business!",
       float: "Levitation!", immortal: "Immortal — for now.", laser: "Pig-eye lasers!" };
