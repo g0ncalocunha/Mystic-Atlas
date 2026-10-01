@@ -51,20 +51,66 @@ MA.views = MA.views || {};
         ${iconG(a.id, 40, 42, 116, `fill="#3d4339"`)}
         <path d="M30 70 A80 80 0 0 1 80 25" stroke="#fff" stroke-width="4" fill="none" opacity=".35" stroke-linecap="round"/>`;
     } else if (theme === "cultivation") {
-      svg = `<defs><radialGradient id="${uid}g" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#9ff5e0" stop-opacity=".55"/><stop offset=".6" stop-color="#2bb5a0" stop-opacity=".18"/><stop offset="1" stop-color="#0b3b40" stop-opacity="0"/></radialGradient>
-        <filter id="${uid}b" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
-        <circle cx="100" cy="100" r="96" fill="url(#${uid}g)"/>
-        <g class="rune-ring"><circle cx="100" cy="100" r="86" fill="none" stroke="#7fe3cf" stroke-opacity=".45" stroke-width="1"/>
-        ${"☰☱☲☳☴☵☶☷".split("").map((t, k) => { const ang = k * 45 * Math.PI / 180; return `<text x="${100 + Math.sin(ang) * 86}" y="${100 - Math.cos(ang) * 86 + 4}" text-anchor="middle" font-size="12" fill="#bff7ea">${t}</text>`; }).join("")}</g>
-        ${iconG(a.id, 44, 44, 112, `fill="#e9fff9" filter="url(#${uid}b)"`)}`;
+      svg = inkEmblem(a, uid, i);
     } else {
-      svg = `<defs><radialGradient id="${uid}r" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#d23b2a"/><stop offset="1" stop-color="#7a120d"/></radialGradient></defs>
-        <circle cx="100" cy="100" r="94" fill="url(#${uid}r)" stroke="#e3b54a" stroke-width="5"/>
-        <circle cx="100" cy="100" r="82" fill="none" stroke="#e3b54a" stroke-width="1.5" stroke-dasharray="1 4"/>
-        ${iconG(a.id, 46, 40, 108, `fill="#f4d27a"`)}
-        <text x="100" y="178" text-anchor="middle" font-size="26" fill="#f4d27a" font-family="'Ma Shan Zheng','Noto Serif TC',serif">${a.zh}</text>`;
+      svg = paperCut(a, uid);
     }
     return `<svg class="emblem ${cls}" viewBox="0 0 200 200" role="img" aria-label="${a.name}">${svg}</svg>`;
+  }
+
+  /* 剪纸 paper-cut: red paper with a sawtooth rim, crescent cuts and an outlined animal on cream */
+  function paperCut(a, uid) {
+    const icon = (MA.ICONS[a.id] || []).map((d) => `<path d="${d}"/>`).join("");
+    let saw = "";
+    for (let k = 0; k < 96; k++) {
+      const r = k % 2 ? 90 : 96, ang = (k * Math.PI) / 48;
+      saw += `${k ? "L" : "M"}${(100 + Math.cos(ang) * r).toFixed(1)} ${(100 + Math.sin(ang) * r).toFixed(1)}`;
+    }
+    let moons = "";
+    for (let k = 0; k < 16; k++) {
+      const ang = (k * Math.PI) / 8, x = 100 + Math.cos(ang) * 81, y = 100 + Math.sin(ang) * 81;
+      moons += `<path d="M${x - 5} ${y}Q${x} ${y - 7} ${x + 5} ${y}Q${x} ${y - 3} ${x - 5} ${y}Z" transform="rotate(${k * 22.5 + 90} ${x} ${y})" fill="#000"/>`;
+    }
+    return `<defs><pattern id="${uid}c" width="110" height="96" patternUnits="userSpaceOnUse" patternTransform="rotate(-24)">
+        <path d="M10 30Q36 2 62 30Q36 16 10 30Z" fill="#000"/><path d="M65 78Q91 50 117 78Q91 64 65 78Z" fill="#000"/></pattern>
+      <mask id="${uid}m" maskUnits="userSpaceOnUse" x="0" y="0" width="200" height="200">
+        <path d="${saw}Z" fill="#fff"/><circle cx="100" cy="100" r="74" fill="#000"/>${moons}
+        <g transform="translate(38 36) scale(${124 / 512})"><g fill="#fff" stroke="#fff" stroke-width="22" stroke-linejoin="round">${icon}</g>
+          <g fill="none" stroke="#000" stroke-width="12" stroke-linejoin="round">${icon}</g><rect width="512" height="512" fill="url(#${uid}c)"/></g>
+      </mask></defs>
+      <circle cx="100" cy="100" r="96" fill="#f6e6c0"/><rect width="200" height="200" fill="#b3241a" mask="url(#${uid}m)"/>
+      <circle cx="100" cy="100" r="96" fill="none" stroke="#e3b54a" stroke-width="2"/>
+      <g transform="translate(138 138)"><rect width="34" height="34" rx="3" fill="#b3241a" stroke="#e3b54a" stroke-width="1"/>
+        <text x="17" y="27" text-anchor="middle" font-size="26" fill="#f6e6c0" font-family="'Ma Shan Zheng','Noto Serif TC',serif">${a.zh}</text></g>`;
+  }
+
+  /* 水墨 ink: a tapered ensō brush circle, wet-ink animal, grey wash and a red seal */
+  function enso(cx, cy, R, seed) {
+    const r = MA.rng("enso" + seed), a0 = -0.95 * Math.PI + (r() - 0.5) * 0.4, a1 = a0 + 1.78 * Math.PI, N = 90, out = [], inn = [];
+    for (let i = 0; i <= N; i++) {
+      const t = i / N, ang = a0 + (a1 - a0) * t;
+      const rad = R * (1 + 0.035 * Math.sin(t * 7 + seed)), w = 2 + 15 * Math.pow(Math.sin(Math.PI * Math.min(1, t * 1.25 + 0.08)), 0.7) * (1 - 0.55 * t);
+      out.push([cx + Math.cos(ang) * (rad + w / 2), cy + Math.sin(ang) * (rad + w / 2)]);
+      inn.push([cx + Math.cos(ang) * (rad - w / 2), cy + Math.sin(ang) * (rad - w / 2)]);
+    }
+    const d = out.concat(inn.reverse()).map((p, i) => `${i ? "L" : "M"}${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join("") + "Z";
+    let streaks = "";
+    for (let k = 0; k < 4; k++) {
+      const t0 = 0.45 + k * 0.11, rr = R + (r() - 0.5) * 8, aa = a0 + (a1 - a0) * t0, ab = a0 + (a1 - a0) * (t0 + 0.22);
+      streaks += `<path d="M${(cx + Math.cos(aa) * rr).toFixed(1)} ${(cy + Math.sin(aa) * rr).toFixed(1)}A${rr} ${rr} 0 0 1 ${(cx + Math.cos(ab) * rr).toFixed(1)} ${(cy + Math.sin(ab) * rr).toFixed(1)}" style="stroke:var(--paper,#f1e8d6)" stroke-width="${(0.6 + r() * 0.9).toFixed(2)}" fill="none" opacity=".8"/>`;
+    }
+    return `<path d="${d}" fill="#1b1a17"/>${streaks}`;
+  }
+  function inkEmblem(a, uid, i) {
+    return `<defs><filter id="${uid}r" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".09" numOctaves="2" seed="${i + 1}"/><feDisplacementMap in="SourceGraphic" scale="5"/><feGaussianBlur stdDeviation=".5"/></filter>
+        <filter id="${uid}b" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="4"/></filter>
+        <filter id="${uid}w" x="-40%" y="-40%" width="180%" height="180%"><feTurbulence type="fractalNoise" baseFrequency=".02" numOctaves="3" seed="${i * 3 + 2}"/><feDisplacementMap in="SourceGraphic" scale="40"/><feGaussianBlur stdDeviation="6"/></filter>
+        <radialGradient id="${uid}g" cx="40%" cy="35%" r="80%"><stop offset="0" stop-color="#3a3733"/><stop offset="1" stop-color="#0f0e0c"/></radialGradient></defs>
+      <ellipse cx="98" cy="110" rx="60" ry="46" fill="#1b1a17" opacity=".16" filter="url(#${uid}w)"/>
+      <g filter="url(#${uid}b)">${enso(100, 101, 74, i)}</g>
+      <g transform="translate(48 46) scale(${106 / 512})" fill="url(#${uid}g)" filter="url(#${uid}r)">${(MA.ICONS[a.id] || []).map((d) => `<path d="${d}"/>`).join("")}</g>
+      <g transform="translate(146 146) rotate(-4)"><rect width="30" height="30" rx="2" style="fill:var(--sect,#b3241a)" opacity=".92"/>
+        <text x="15" y="23" text-anchor="middle" font-size="22" fill="#f1e8d6" font-family="'Ma Shan Zheng','Noto Serif TC',serif">${a.zh}</text></g>`;
   }
 
   function taijitu(cls = "") {
@@ -92,6 +138,58 @@ MA.views = MA.views || {};
 
   function myIndex() { const d = MA.profile.derived(); return d ? d.year.b : null; }
 
+  /* ------------------------------------------------------------ murim sect */
+  function assignedSect() {
+    const d = MA.profile.derived();
+    if (!d) return MA.SECTS[0];
+    const dm = CN.stems[d.bazi.pillars[2].s].el;
+    const pool = MA.SECTS.filter((s) => s.els.includes(dm));
+    return MA.pick(MA.rng("sect|" + d.seed), pool.length ? pool : MA.SECTS);
+  }
+  function currentSect() {
+    const chosen = MA.store.get("sect", null);
+    return MA.SECTS.find((s) => s.id === chosen) || assignedSect();
+  }
+  let paintedSect = null;
+  function paintBackground() {
+    const bgA = $(".z-bg-a", root), parts = $(".z-particles", root);
+    if (theme !== "cultivation") { bgA.innerHTML = ""; paintedSect = null; parts.dataset.p = ""; root.style.removeProperty("--sect"); return; }
+    const s = currentSect();
+    root.style.setProperty("--sect", s.accent);
+    root.style.setProperty("--paper", s.paper);
+    parts.dataset.p = s.particle;
+    if (paintedSect !== s.id) { bgA.innerHTML = MA.landscape(s.id); paintedSect = s.id; }
+  }
+  function sectStrip() {
+    const s = currentSect(), as = assignedSect(), d = MA.profile.derived();
+    const chosen = MA.store.get("sect", null) && s.id !== as.id;
+    return `<div class="sect-strip">
+        <div class="ss-seal">${s.seal}</div>
+        <div class="ss-txt"><span class="ss-k">門派 · ${chosen ? "Sect of your choosing" : d ? "Your sect, decided by your Day Master" : "Sect"}</span>
+          <b>${s.name} <span class="cz">${s.zh}</span></b><small>${esc(s.place)} — “${esc(s.motto)}”</small></div>
+        <button type="button" class="ss-btn" aria-expanded="false">Change sect ▾</button>
+      </div>
+      <div class="sect-picker" hidden>${MA.SECTS.map((x) => `<button type="button" class="sp-card ${x.id === s.id ? "on" : ""}" data-sect="${x.id}">
+          <span class="sp-thumb">${MA.landscape(x.id, { thumb: true })}</span>
+          <span class="sp-name">${x.name} <span class="cz">${x.zh}</span></span>
+          <span class="sp-tag">${x.id === as.id && d ? "assigned · " : ""}${x.els.join(" · ")}</span></button>`).join("")}
+        ${chosen ? `<button type="button" class="sp-reset">Return to my assigned sect (${as.name})</button>` : ""}</div>`;
+  }
+  function bindSectStrip(box) {
+    const btn = $(".ss-btn", box), picker = $(".sect-picker", box);
+    if (!btn) return;
+    btn.onclick = () => { picker.hidden = !picker.hidden; btn.setAttribute("aria-expanded", !picker.hidden); };
+    $$(".sp-card", box).forEach((c) => (c.onclick = () => {
+      const id = c.dataset.sect;
+      if (id === assignedSect().id) MA.store.del("sect"); else MA.store.set("sect", id);
+      const s = currentSect();
+      MA.toast(`You bow before the gates of ${s.name}. ${s.zh}`);
+      renderAll();
+    }));
+    const reset = $(".sp-reset", box);
+    if (reset) reset.onclick = () => { MA.store.del("sect"); renderAll(); };
+  }
+
   /* ------------------------------------------------------------ rendering */
   function shell() {
     root.innerHTML = `<div class="z-bg" aria-hidden="true"><div class="z-bg-a"></div><div class="z-bg-b"></div><div class="z-particles"></div></div>
@@ -112,6 +210,7 @@ MA.views = MA.views || {};
 
   function renderAll() {
     if (sel == null) sel = myIndex() ?? MA.cn.yearName(MA.cn.lunarYear(new Date())).b;
+    paintBackground();
     renderHero(); renderWheel(); renderDetail(); renderAlign(); renderExtra();
   }
 
@@ -125,8 +224,9 @@ MA.views = MA.views || {};
         <div class="zh-txt"><p class="zh-kicker">${themeWord("The year of the", "Current talisman year:", "The heavens now favour the")} ${nowYear.label}</p>
         <h1>${themeWord("Find your animal", "Which talisman is yours?", "Awaken your spirit beast")}</h1>
         <p>Enter your birth date to reveal your animal, your Four Pillars and how your five elements align.</p>
-        <button type="button" class="btn">Enter my data</button></div>`;
-      $("button", box).onclick = MA.openProfile;
+        <button type="button" class="btn">Enter my data</button></div>${theme === "cultivation" ? sectStrip() : ""}`;
+      $(".btn", box).onclick = MA.openProfile;
+      bindSectStrip(box);
       return;
     }
     const y = d.year, a = y.animal, cny = MA.cn.newYear(d.lunarYear);
@@ -140,7 +240,8 @@ MA.views = MA.views || {};
         <p class="zh-py">${y.py} · ${d.lunarYear} · ${a.zh} ${a.name}${theme === "jca" && a.talisman.alias ? ` (${a.talisman.alias} talisman)` : ""}</p>
         ${tag}<p>${esc(a.about)}</p>
         ${near ? `<p class="zh-note">Lunar New Year ${d.lunarYear} fell on ${cny.toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" })}${MA.cn.hasIntl ? "" : " (approximate)"} — your animal follows that boundary.</p>` : ""}
-      </div>`;
+      </div>${theme === "cultivation" ? sectStrip() : ""}`;
+    bindSectStrip(box);
   }
 
   function renderWheel() {
@@ -330,7 +431,7 @@ MA.views = MA.views || {};
         <button type="button" class="btn act">Activate my talisman</button></div>`;
       $(".act", box).onclick = () => talismanFx(a.talisman.fx);
     } else if (theme === "cultivation") {
-      if (!d) { box.innerHTML = `<h2 class="z-h">Cultivator's Record</h2><p>Enter your birth data to receive your Dao name, spiritual root and realm.</p>`; return; }
+      if (!d) { box.innerHTML = `<h2 class="z-h">Cultivator's Record · 修仙录</h2><p>${esc(currentSect().about)}</p><p>Enter your birth data to receive your Dao name, spiritual root and realm.</p>`; return; }
       const r = MA.rng("dao|" + d.seed);
       const [c1, m1] = MA.pick(r, MA.CULT.dao), [c2, m2] = MA.pick(r, MA.CULT.dao.filter((x) => x[0] !== c1));
       const chars = [];
@@ -344,15 +445,16 @@ MA.views = MA.views || {};
       const born = d.date, now = new Date();
       let nb = new Date(now.getFullYear(), born.getMonth(), born.getDate()); if (nb < now) nb.setFullYear(nb.getFullYear() + 1);
       const days = Math.floor((now - born) / 864e5), toTrib = Math.ceil((nb - now) / 864e5);
-      const dm = CN.stems[d.bazi.pillars[2].s].el, [sect, sectZh] = MA.CULT.sects[dm];
+      const sect = currentSect();
       box.innerHTML = `<h2 class="z-h">Cultivator's Record · 修仙录</h2>
+        <p class="cult-about">${esc(sect.about)}</p>
         <div class="cult-grid">
           <div class="cult-name"><span class="cn-zh">${c1}${c2}</span><span>Dao name · ${m1} ${m2}</span></div>
           <dl>
             <dt>Spiritual root</dt><dd>${rootName} <small>${(roots.length ? roots : Object.keys(cnt)).map((e) => EL[e].zh + " " + e).join(" · ")}</small></dd>
             <dt>Realm</dt><dd>${realm[1]} <span class="cz">${realm[2]}</span> · layer ${layer}${next ? ` <small>(next: ${next[1]} at ${next[0]})</small>` : ""}</dd>
-            <dt>Sect</dt><dd>${sect} <span class="cz">${sectZh}</span> <small>(${dm} Day Master)</small></dd>
-            <dt>Cultivation technique</dt><dd>${MA.pick(r, MA.CULT.techniques)}</dd>
+            <dt>Sect</dt><dd>${sect.name} <span class="cz">${sect.zh}</span> <small>${esc(sect.place)}</small></dd>
+            <dt>Secret art</dt><dd>${MA.pick(MA.rng("art|" + d.seed + sect.id), sect.arts)}</dd>
             <dt>Qi gathered</dt><dd>${days.toLocaleString()} days of breathing practice</dd>
             <dt>Next heavenly tribulation</dt><dd>${toTrib === 0 ? "Today! Brace for lightning (and cake)." : `in ${toTrib} days (your birthday)`}</dd>
           </dl></div>

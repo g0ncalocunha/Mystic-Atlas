@@ -197,42 +197,97 @@ img.emblem { object-fit: contain; }
 .jf-uncle b { font: 22px "Bangers", sans-serif; letter-spacing: .06em; color: #c0392b; margin-right: 6px; }
 .jca-file .btn { margin-left: 16px; }
 
-/* =========================================================== CULTIVATION */
-#view-zodiac[data-theme="cultivation"] { --zc-bg: rgba(10, 34, 38, .72); --zc-fg: #e3fff8; --zc-line: rgba(127, 227, 207, .3); --zc-acc: #7fe3cf; --zhead: "Cinzel", serif; color: #e3fff8; }
-#view-zodiac[data-theme="cultivation"] .z-bg-a {
-  background:
-    radial-gradient(ellipse 60% 22% at 20% 78%, rgba(200, 255, 245, .14), transparent),
-    radial-gradient(ellipse 50% 18% at 80% 62%, rgba(200, 255, 245, .12), transparent),
-    linear-gradient(180deg, #06171d 0%, #0b3540 55%, #134b4f 80%, #0a2a30 100%);
+/* =========================================================== CULTIVATION — ink wash 水墨 */
+#view-zodiac[data-theme="cultivation"] {
+  --sect: #b3241a; --paper: #f3ebdd; --ink: #1b1a17;
+  --zc-bg: color-mix(in srgb, var(--paper) 86%, transparent); --zc-fg: var(--ink); --zc-line: rgba(27, 26, 23, .22); --zc-acc: var(--sect);
+  --zhead: "Ma Shan Zheng", "Zhi Mang Xing", "Noto Serif TC", serif; --zfont: "Cormorant Garamond", serif;
+  color: var(--ink); background: var(--paper); font-family: "Cormorant Garamond", Georgia, serif;
 }
-#view-zodiac[data-theme="cultivation"] .z-bg-b {
-  background:
-    linear-gradient(to top, #061419 0 6%, transparent 6%),
-    conic-gradient(from 200deg at 18% 70%, transparent 0 40deg, #0a2a31 40deg 100deg, transparent 100deg),
-    conic-gradient(from 210deg at 46% 64%, transparent 0 34deg, #0d313a 34deg 110deg, transparent 110deg),
-    conic-gradient(from 205deg at 78% 72%, transparent 0 40deg, #0a2a31 40deg 104deg, transparent 104deg);
-  opacity: .95;
+#view-zodiac[data-theme="cultivation"] .z-bg-a { background: var(--paper); }
+#view-zodiac[data-theme="cultivation"] .z-bg-a .landscape { width: 100%; height: 100%; display: block; }
+#view-zodiac[data-theme="cultivation"] .z-bg-b { background: linear-gradient(90deg, color-mix(in srgb, var(--paper) 55%, transparent), transparent 22%, transparent 78%, color-mix(in srgb, var(--paper) 55%, transparent)); }
+#view-zodiac[data-theme="cultivation"] .z-card {
+  border: 0; border-radius: 2px; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+  box-shadow: 0 1px 0 rgba(27, 26, 23, .15), 0 18px 40px -20px rgba(27, 26, 23, .45);
 }
-#view-zodiac[data-theme="cultivation"] .z-particles i { background: #bff7ea; box-shadow: 0 0 10px #7fe3cf, 0 0 20px #7fe3cf; }
-#view-zodiac[data-theme="cultivation"] .z-card { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 0 40px rgba(127, 227, 207, .08), inset 0 0 30px rgba(127, 227, 207, .05); }
-#view-zodiac[data-theme="cultivation"] .z-hero h1 { color: #f2fffb; text-shadow: 0 0 22px rgba(127, 227, 207, .65); }
-#view-zodiac[data-theme="cultivation"] .zh-zh { color: #bff7ea; }
-#view-zodiac[data-theme="cultivation"] .btn { background: linear-gradient(90deg, #7fe3cf, #c9fff1); color: #06272b; }
-#view-zodiac[data-theme="cultivation"] .rune-ring { animation: spin 24s linear infinite; transform-origin: 100px 100px; }
-#view-zodiac[data-theme="cultivation"] .hero-emblem { animation: hover 5s ease-in-out infinite; }
-@keyframes hover { 50% { transform: translateY(-10px); } }
-#view-zodiac[data-theme="cultivation"] .wx-node circle { stroke: #06272b; }
-#view-zodiac[data-theme="cultivation"] .yy-bar { border-color: rgba(127, 227, 207, .4); }
+/* hand-brushed frame: rough ink strokes top and bottom */
+#view-zodiac[data-theme="cultivation"] .z-card::before, #view-zodiac[data-theme="cultivation"] .z-card::after {
+  content: ""; position: absolute; left: -6px; right: -6px; height: 14px; pointer-events: none; opacity: .85;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 14' preserveAspectRatio='none'%3E%3Cpath d='M2 8 C80 3 160 10 260 6 S440 2 598 7 L596 10 C430 7 300 12 180 10 S40 12 4 11Z' fill='%231b1a17'/%3E%3Cpath d='M120 6 L210 5 M380 6 L470 7' stroke='%23f3ebdd' stroke-width='.8'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+#view-zodiac[data-theme="cultivation"] .z-card::before { top: -7px; }
+#view-zodiac[data-theme="cultivation"] .z-card::after { bottom: -7px; transform: scaleX(-1); }
+#view-zodiac[data-theme="cultivation"] .z-h { font-size: 30px; letter-spacing: .02em; color: var(--ink); font-weight: 400; display: inline-block; position: relative; padding: 0 10px; }
+#view-zodiac[data-theme="cultivation"] .z-h::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 2px; height: 12px; z-index: -1; opacity: .5;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 12' preserveAspectRatio='none'%3E%3Cpath d='M0 7 C60 1 140 4 300 3 L296 9 C200 11 90 12 2 11Z' fill='%23b3241a'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+#view-zodiac[data-theme="cultivation"] .z-hero { color: var(--ink); grid-template-columns: 220px 1fr; }
+#view-zodiac[data-theme="cultivation"] .zh-txt { background: color-mix(in srgb, var(--paper) 70%, transparent); padding: 10px 16px; border-radius: 2px; backdrop-filter: blur(2px); }
+#view-zodiac[data-theme="cultivation"] .z-hero h1 { font-family: "Ma Shan Zheng", "Noto Serif TC", serif; font-weight: 400; font-size: clamp(34px, 5vw, 56px); color: var(--ink); text-shadow: none; }
+#view-zodiac[data-theme="cultivation"] .zh-zh { color: var(--sect); font-family: "Zhi Mang Xing", "Ma Shan Zheng", serif; font-size: 1.35em; }
+#view-zodiac[data-theme="cultivation"] .zh-kicker { font-family: "Cinzel", serif; letter-spacing: .16em; }
+#view-zodiac[data-theme="cultivation"] .btn { background: var(--ink); color: var(--paper); border-radius: 2px; font-family: "Ma Shan Zheng", "Cinzel", serif; font-size: 20px; letter-spacing: .1em; }
+#view-zodiac[data-theme="cultivation"] .hero-emblem { animation: hover 6s ease-in-out infinite; filter: drop-shadow(0 10px 10px rgba(27, 26, 23, .2)); }
+@keyframes hover { 50% { transform: translateY(-8px); } }
+#view-zodiac[data-theme="cultivation"] .z-detail h2 { font-family: "Ma Shan Zheng", serif; font-weight: 400; font-size: 36px; }
+#view-zodiac[data-theme="cultivation"] .zd-zh { color: var(--sect); }
+#view-zodiac[data-theme="cultivation"] .wn-t { font: 18px "Ma Shan Zheng", "Cinzel", serif; }
+#view-zodiac[data-theme="cultivation"] .wheel-ring { stroke: var(--ink); stroke-opacity: .35; }
+#view-zodiac[data-theme="cultivation"] .wn.focus .wn-halo { stroke: var(--sect); fill: color-mix(in srgb, var(--sect) 12%, transparent); }
+#view-zodiac[data-theme="cultivation"] .rl.trine { stroke: var(--ink); fill: rgba(27, 26, 23, .05); }
+#view-zodiac[data-theme="cultivation"] .chip { border-color: var(--ink); border-radius: 2px; }
+#view-zodiac[data-theme="cultivation"] .chip:hover { background: var(--ink); color: var(--paper); }
+#view-zodiac[data-theme="cultivation"] .zd-traits span, #view-zodiac[data-theme="cultivation"] .pl { border-radius: 2px; border-color: rgba(27, 26, 23, .25); }
+#view-zodiac[data-theme="cultivation"] .pl-c { font-family: "Zhi Mang Xing", "Ma Shan Zheng", "Noto Serif TC", serif; font-weight: 400; font-size: 46px; filter: saturate(.55) brightness(.75); }
+#view-zodiac[data-theme="cultivation"] .wx-node circle { stroke: var(--paper); filter: saturate(.5) brightness(.85); }
+#view-zodiac[data-theme="cultivation"] .wx-zh { font-family: "Ma Shan Zheng", "Noto Serif TC", serif; font-weight: 400; font-size: 26px; }
+#view-zodiac[data-theme="cultivation"] .yy-bar { border-color: rgba(27, 26, 23, .3); border-radius: 2px; }
+#view-zodiac[data-theme="cultivation"] .za-read h3, #view-zodiac[data-theme="cultivation"] .za-foot h3 { font-family: "Ma Shan Zheng", "Noto Serif TC", serif; font-weight: 400; font-size: 24px; color: var(--sect); }
+#view-zodiac[data-theme="cultivation"] .zd-years span { border-radius: 2px; }
+
+/* sect strip & picker */
+.sect-strip { grid-column: 1 / -1; display: flex; align-items: center; gap: 16px; padding: 12px 16px; background: color-mix(in srgb, var(--paper) 80%, transparent); border-left: 4px solid var(--sect); backdrop-filter: blur(3px); }
+.ss-seal { flex: none; width: 58px; height: 58px; display: grid; place-items: center; background: var(--sect); color: var(--paper); font: 26px/1 "Ma Shan Zheng", "Noto Serif TC", serif; writing-mode: vertical-rl; border-radius: 3px; transform: rotate(-3deg); letter-spacing: -.05em; }
+.ss-txt { flex: 1; display: grid; }
+.ss-k { font: 12px "Cinzel", serif; letter-spacing: .14em; text-transform: uppercase; opacity: .7; }
+.ss-txt b { font-size: 24px; font-weight: 600; }
+.ss-txt small { font-style: italic; opacity: .8; font-size: 15px; }
+.ss-btn, .sp-reset { background: none; border: 1.5px solid var(--ink); color: var(--ink); padding: 7px 14px; border-radius: 2px; font: 16px "Cormorant Garamond", serif; font-weight: 600; white-space: nowrap; }
+.ss-btn:hover, .sp-reset:hover { background: var(--ink); color: var(--paper); }
+.sect-picker { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; padding: 12px; background: color-mix(in srgb, var(--paper) 88%, transparent); }
+.sect-picker[hidden] { display: none; }
+.sp-card { display: grid; gap: 4px; padding: 0 0 8px; text-align: left; background: #fffaf0; border: 1px solid rgba(27, 26, 23, .2); border-radius: 2px; overflow: hidden; color: var(--ink); transition: transform .2s, box-shadow .2s; }
+.sp-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px -10px rgba(0, 0, 0, .4); }
+.sp-card.on { outline: 3px solid var(--sect); }
+.sp-thumb { display: block; aspect-ratio: 16 / 9; overflow: hidden; }
+.sp-thumb svg { width: 100%; height: 100%; display: block; }
+.sp-name { padding: 0 10px; font-weight: 600; font-size: 17px; }
+.sp-tag { padding: 0 10px; font-size: 13px; opacity: .65; font-style: italic; }
+.sp-reset { grid-column: 1 / -1; justify-self: start; }
+
+/* cultivator's record */
+.cult-about { font-style: italic; margin-top: 0; }
 .cult-grid { display: grid; grid-template-columns: 200px 1fr; gap: 24px; align-items: center; }
 .cult-name { text-align: center; }
-.cn-zh { display: block; font: 76px/1.1 "Ma Shan Zheng", "Noto Serif TC", serif; color: #f2fffb; text-shadow: 0 0 24px #7fe3cf; }
+.cn-zh { display: block; font: 84px/1.1 "Zhi Mang Xing", "Ma Shan Zheng", "Noto Serif TC", serif; color: var(--ink); }
 .cult-grid dl { display: grid; grid-template-columns: auto 1fr; gap: 8px 18px; margin: 0; }
-.cult-grid dt { font: 12px "Cinzel", serif; letter-spacing: .14em; text-transform: uppercase; color: #7fe3cf; padding-top: 4px; }
+.cult-grid dt { font: 12px "Cinzel", serif; letter-spacing: .14em; text-transform: uppercase; color: var(--sect); padding-top: 4px; }
 .cult-grid dd { margin: 0; }
 .cult-grid small { opacity: .65; }
-.cz { font-family: "Ma Shan Zheng", "Noto Serif TC", serif; color: #bff7ea; }
-.qi-bar { margin-top: 16px; height: 8px; border-radius: 999px; background: rgba(127, 227, 207, .15); overflow: hidden; }
-.qi-bar span { display: block; height: 100%; background: linear-gradient(90deg, #2bb5a0, #c9fff1); box-shadow: 0 0 12px #7fe3cf; }
+.cz { font-family: "Ma Shan Zheng", "Noto Serif TC", serif; color: var(--sect); font-weight: 400; }
+.qi-bar { margin-top: 16px; height: 10px; background: rgba(27, 26, 23, .08); overflow: hidden; border-radius: 1px; }
+.qi-bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--ink), color-mix(in srgb, var(--ink) 40%, transparent)); border-radius: 0 6px 6px 0; }
+
+/* sect weather */
+.z-particles[data-p="petal"] i, .z-particles[data-p="leaf"] i, .z-particles[data-p="snow"] i { top: -20px; bottom: auto; animation-name: fall; }
+.z-particles[data-p="petal"] i { width: 9px; height: 7px; border-radius: 60% 0 60% 0; background: #e06b84; opacity: .85; }
+.z-particles[data-p="leaf"] i { width: 12px; height: 4px; border-radius: 0 100% 0 100%; background: color-mix(in srgb, var(--sect) 70%, #2a3); }
+.z-particles[data-p="snow"] i { width: 5px; height: 5px; background: #fff; box-shadow: 0 0 4px rgba(120, 150, 180, .6); }
+.z-particles[data-p="ember"] i { width: 4px; height: 4px; background: #d8432f; box-shadow: 0 0 8px #ff6a3d; }
+.z-particles[data-p="mist"] i { width: 60px; height: 14px; border-radius: 50%; background: rgba(255, 255, 255, .55); filter: blur(4px); }
+@keyframes fall { 0% { opacity: 0; transform: translate(0, 0) rotate(0) scale(var(--s)); } 10% { opacity: .9; } 50% { transform: translate(40px, 50vh) rotate(200deg) scale(var(--s)); } 100% { opacity: 0; transform: translate(-20px, 100vh) rotate(420deg) scale(var(--s)); } }
 
 @media (max-width: 960px) {
   .z-grid, .za-grid, .za-empty { grid-template-columns: minmax(0, 1fr); }
@@ -243,6 +298,11 @@ img.emblem { object-fit: contain; }
   .zh-art { width: 160px; height: 160px; }
   .za-pillars { grid-template-columns: repeat(2, 1fr); }
   .za-foot, .zd-cols, .za-rel, .cult-grid, .jf-body, .slip-wrap { grid-template-columns: minmax(0, 1fr); }
+  #view-zodiac[data-theme="cultivation"] .z-hero { grid-template-columns: minmax(0, 1fr); }
+  .sect-strip { display: grid; grid-template-columns: 58px minmax(0, 1fr); text-align: left; width: 100%; }
+  .ss-btn { grid-column: 1 / -1; }
+  .sect-picker { width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 8px; gap: 8px; }
+  .sp-name { font-size: 15px; }
   .z-hero h1 { overflow-wrap: anywhere; }
   .jf-photo { margin: 0 auto; }
   .z-card { padding: 16px; }

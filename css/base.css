@@ -147,7 +147,7 @@ body[data-mode="tarot"][data-skin="jojo"] .dd-btn, body[data-mode="tarot"][data-
 body[data-mode="zodiac"][data-skin="imperial"] { --bar-bg: #7a120d; --bar-fg: #f4d27a; --bar-line: #e3b54a; --accent: #e3b54a; --menu-bg: #5e0d09; --menu-hover: rgba(227, 181, 74, .2); }
 body[data-mode="zodiac"][data-skin="jca"] { --bar-bg: #1d2a44; --bar-fg: #ffd23f; --bar-line: #ff7a1a; --accent: #ff7a1a; --menu-bg: #15203a; --menu-hover: rgba(255, 122, 26, .2); --font-display: "Bangers", Impact, sans-serif; }
 body[data-mode="zodiac"][data-skin="jca"] .dd-btn, body[data-mode="zodiac"][data-skin="jca"] .dd-menu li { letter-spacing: .1em; font-size: 16px; }
-body[data-mode="zodiac"][data-skin="cultivation"] { --bar-bg: rgba(8, 30, 34, .8); --bar-fg: #d9fff6; --bar-line: rgba(127, 227, 207, .35); --accent: #7fe3cf; --menu-bg: #0c2a2e; --menu-hover: rgba(127, 227, 207, .15); }
+body[data-mode="zodiac"][data-skin="cultivation"] { --bar-bg: rgba(27, 26, 23, .92); --bar-fg: #f3ebdd; --bar-line: rgba(243, 235, 221, .25); --accent: #c9a96a; --menu-bg: #1b1a17; --menu-hover: rgba(243, 235, 221, .12); }
 .topbar { background: var(--bar-bg); }
 
 @media (max-width: 720px) {
