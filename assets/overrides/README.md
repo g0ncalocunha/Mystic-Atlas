@@ -23,11 +23,10 @@ MA.OVERRIDES = {
 A value can also point at a region of one texture atlas instead of a separate file:
 
 ```js
-"tarot/p5/0": { src: "images.jpg", size: [577, 346], rect: [58.7, 0, 55, 107] },  // x, y, w, h in atlas pixels
+"tarot/p5/0": { src: "arcana.png", size: [5131, 3076], rect: [514, 1, 512, 1024] },  // x, y, w, h in atlas pixels
 ```
 
-`images.jpg` is the Persona 5 deck (back plus 22 Major Arcana in Marseille order). Its regions are already
-listed in `manifest.js`. A sharper version with the same layout can be dropped in by updating `size`
-(the rects scale proportionally) — e.g. a 2× image: `size: [1154, 692]` and every rect doubled.
+`arcana.png` is the Persona 5 deck (back plus 22 Major Arcana in Marseille order on a 10 × 3 grid of
+513 × 1025 px cells). Its regions are already listed in `manifest.js`.
 
 Only use images you have the right to publish.
