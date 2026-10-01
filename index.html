@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mystic Atlas</title>
+<meta name="description" content="Tarot, a navigable horoscope sky and the Chinese zodiac — read with your own birth data.">
+<meta name="theme-color" content="#140a24">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%A6%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Anton&family=Bangers&family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Ma+Shan+Zheng&family=Noto+Sans+JP:wght@900&family=Noto+Serif+TC:wght@500;900&family=Permanent+Marker&family=Special+Elite&display=swap">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/tarot.css">
+<link rel="stylesheet" href="css/horoscope.css">
+<link rel="stylesheet" href="css/zodiac.css">
+</head>
+<body data-mode="tarot" data-skin="classic">
+
+<header class="topbar">
+  <div class="tb-left">
+    <div class="dd" id="modeDD">
+      <button class="dd-btn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Choose section">
+        <span class="dd-ico"></span><span class="dd-label"></span><span class="dd-caret">▾</span>
+      </button>
+      <ul class="dd-menu" role="listbox" tabindex="-1"></ul>
+    </div>
+  </div>
+  <div class="tb-title" id="tbTitle">Mystic Atlas</div>
+  <div class="tb-right">
+    <div class="dd dd-right" id="skinDD">
+      <button class="dd-btn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Choose skin">
+        <span class="dd-ico"></span><span class="dd-label"></span><span class="dd-caret">▾</span>
+      </button>
+      <ul class="dd-menu" role="listbox" tabindex="-1"></ul>
+    </div>
+    <button class="profile-btn" id="profileBtn" type="button" aria-label="Your birth data">
+      <span class="avatar" id="avatar">?</span><span class="pname" id="pname">Your data</span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <section class="view" id="view-tarot" aria-label="Tarot"></section>
+  <section class="view" id="view-horoscope" aria-label="Horoscope"></section>
+  <section class="view" id="view-zodiac" aria-label="Chinese zodiac"></section>
+</main>
+
+<dialog id="profileDlg">
+  <form method="dialog" id="profileForm" class="pf">
+    <h2>Your birth chart</h2>
+    <p class="pf-sub">Used to read your cards, stars and zodiac. Saved only in this browser.</p>
+    <label>Name <input name="name" type="text" autocomplete="name" maxlength="60" required placeholder="e.g. Ann Takamaki"></label>
+    <div class="pf-row">
+      <label>Birth date <input name="birth" type="date" required min="1900-01-01" max="2100-12-31"></label>
+      <label>Birth time <small>(optional)</small> <input name="time" type="time"></label>
+    </div>
+    <div class="pf-row">
+      <label>Gender
+        <select name="gender">
+          <option value="female">Female</option>
+          <option value="male">Male</option>
+          <option value="nonbinary">Non-binary</option>
+          <option value="unspecified" selected>Prefer not to say</option>
+        </select>
+      </label>
+      <label>Birthplace <small>(optional)</small> <input name="place" type="text" maxlength="60" placeholder="City"></label>
+    </div>
+    <div class="pf-actions">
+      <button type="button" class="pf-ghost" id="pfDemo">Try a demo</button>
+      <button type="button" class="pf-ghost" id="pfClear">Forget me</button>
+      <span class="grow"></span>
+      <button type="button" class="pf-ghost" id="pfCancel">Cancel</button>
+      <button type="submit" class="pf-go" value="save">Read my stars ✦</button>
+    </div>
+  </form>
+</dialog>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<footer class="credits">
+  Star data <a href="https://github.com/ofrohn/d3-celestial">d3-celestial</a> ·
+  icons <a href="https://game-icons.net">game-icons.net</a> (CC BY 3.0) ·
+  fan-made, not affiliated with Atlus, Araki/Shueisha or Sony.
+</footer>
+
+<script src="assets/overrides/manifest.js"></script>
+<script src="js/data/icons.js"></script>
+<script src="js/data/tarot.js"></script>
+<script src="js/data/western.js"></script>
+<script src="js/data/chinese.js"></script>
+<script src="js/data/sky.js"></script>
+<script src="js/core.js"></script>
+<script src="js/tarot.js"></script>
+<script src="js/horoscope.js"></script>
+<script src="js/zodiac.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
