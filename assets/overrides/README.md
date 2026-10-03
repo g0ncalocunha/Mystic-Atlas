@@ -23,6 +23,9 @@ MA.OVERRIDES = {
 The Persona 5 deck lives in `p5/`: one WebP per card (`back.webp`, `00-fool.webp` … `21-world.webp`, Rider–Waite
 numbering), so a reading only downloads the cards it shows. They're already registered in `manifest.js`.
 
+The JoJo deck lives in `jojo/`: the Stardust Crusaders OVA tarot, one 520 × 858 transparent WebP per card
+(`00-fool.webp` … `21-world.webp`), deskewed and cut out of the original scans. The Bizarre skin keeps its drawn card back.
+
 The Jackie Chan Adventures talismans live in `jca/`: one 224 × 224 transparent WebP per animal (`rat.webp` … `pig.webp`;
 the Sheep talisman is `goat.webp`), cut from a sheet of the twelve medallions. They're registered in `manifest.js` too.
 

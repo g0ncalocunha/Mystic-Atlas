@@ -73,6 +73,7 @@ MA.views = MA.views || {};
   function cardFront(c) {
     const art = MA.override(`tarot/${skin}/${c.n}`, MA.icon("t" + c.n, "tc-icon"), c.name);
     if (skin === "p5" && MA.hasOverride(`tarot/p5/${c.n}`)) return `<div class="cf-art">${art}</div>`;
+    if (skin === "jojo" && MA.hasOverride(`tarot/jojo/${c.n}`)) return `<div class="cf-art cf-art-jojo">${MA.override(`tarot/jojo/${c.n}`, "", c.name, "cover")}</div>`;
     if (skin === "p5") return `<div class="cf-p5"><div class="cf-p5-num">${MA.ROMAN[c.n]}</div>
       <div class="cf-p5-art">${art}</div><div class="cf-p5-name">${ransom(c.name.replace(/^The /, ""), c.n)}</div>
       <div class="cf-p5-conf">${esc(c.p5.conf)}</div></div>`;

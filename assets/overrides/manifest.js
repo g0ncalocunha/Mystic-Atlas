@@ -30,6 +30,31 @@ MA.OVERRIDES = {
   "tarot/p5/20": "p5/20-judgement.webp",               // Le Jugement
   "tarot/p5/21": "p5/21-world.webp",                   // Le Monde
 
+  /* JoJo "Bizarre" deck: the Stardust Crusaders OVA tarot, one 520 x 858 transparent WebP per card
+     (scans deskewed and cut out of their black background), keyed by Rider–Waite number. */
+  "tarot/jojo/0": "jojo/00-fool.webp",
+  "tarot/jojo/1": "jojo/01-magician.webp",
+  "tarot/jojo/2": "jojo/02-high-priestess.webp",
+  "tarot/jojo/3": "jojo/03-empress.webp",
+  "tarot/jojo/4": "jojo/04-emperor.webp",
+  "tarot/jojo/5": "jojo/05-hierophant.webp",
+  "tarot/jojo/6": "jojo/06-lovers.webp",
+  "tarot/jojo/7": "jojo/07-chariot.webp",
+  "tarot/jojo/8": "jojo/08-strength.webp",
+  "tarot/jojo/9": "jojo/09-hermit.webp",
+  "tarot/jojo/10": "jojo/10-wheel-of-fortune.webp",
+  "tarot/jojo/11": "jojo/11-justice.webp",
+  "tarot/jojo/12": "jojo/12-hanged-man.webp",
+  "tarot/jojo/13": "jojo/13-death.webp",
+  "tarot/jojo/14": "jojo/14-temperance.webp",
+  "tarot/jojo/15": "jojo/15-devil.webp",
+  "tarot/jojo/16": "jojo/16-tower.webp",
+  "tarot/jojo/17": "jojo/17-star.webp",
+  "tarot/jojo/18": "jojo/18-moon.webp",
+  "tarot/jojo/19": "jojo/19-sun.webp",
+  "tarot/jojo/20": "jojo/20-judgement.webp",
+  "tarot/jojo/21": "jojo/21-world.webp",
+
   /* Jackie Chan Adventures talismans: one 224 x 224 transparent WebP per animal, cut from the medallion sheet. */
   "jca/rat": "jca/rat.webp",
   "jca/ox": "jca/ox.webp",
